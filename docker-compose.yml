@@ -1,0 +1,22 @@
+services:
+  backend:
+    build: .
+    container_name: patentiq_backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: sqlite+aiosqlite:////app/patentiq.db
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./patentiq.db:/app/patentiq.db
+      - ./uploads:/app/uploads
+      - ./patent_uploads:/app/patent_uploads
+      - ./reports:/app/reports
+      - ./chroma_db:/app/chroma_db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
